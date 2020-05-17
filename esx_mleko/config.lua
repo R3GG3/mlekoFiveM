@@ -18,6 +18,8 @@ Config.HowMuchSmietanaWithdraw = 1
 Config.HowMuchSerGet = 1
 Config.HowMuchSerSell = 1
 
+Config.Min = 1
+
 Config.Locale = 'en'
 
 Config.Zones = {

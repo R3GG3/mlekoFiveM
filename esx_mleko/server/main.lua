@@ -55,7 +55,7 @@ local function Smietana(source)
 
 			if pooch.limit ~= -1 and pooch.count >= pooch.limit then
 				TriggerClientEvent('esx:showNotification', source, _U('you_do_not_have_enough_oranges'))
-			elseif kodaQuantity < 2 then
+			elseif kodaQuantity < Config.Min then
 				TriggerClientEvent('esx:showNotification', source, _U('you_do_not_have_any_more_oranges'))
 			else
 				xPlayer.removeInventoryItem('mleko', Config.HowMuchMilkWithdraw)
@@ -116,7 +116,7 @@ local function Cheese(source)
 
 			if ile_sera.limit ~= -1 and ile_sera.count >= ile_sera.limit then
 				TriggerClientEvent('esx:showNotification', source, _U('you_do_not_have_enough_oranges'))
-			elseif ile_smietany < 2 then
+			elseif ile_smietany < Config.Min then
 				TriggerClientEvent('esx:showNotification', source, _U('you_do_not_have_smietana'))
 			else
 				xPlayer.removeInventoryItem('smietana', Config.HowMuchSmietanaWithdraw)
