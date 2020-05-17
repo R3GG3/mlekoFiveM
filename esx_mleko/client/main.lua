@@ -39,17 +39,13 @@ AddEventHandler('esx_mleko:hasEnteredMarker', function(zone)
 	  CurrentActionMsg  = _U('make_smietana')
 	  CurrentActionData = {}
 	elseif zone == 'MakeCheese' then
-		if koda_poochQTE >= 1 then
-			CurrentAction     = zone
-			CurrentActionMsg  = _U('make_cheese')
-			CurrentActionData = {}
-		end
+    CurrentAction     = zone
+	  CurrentActionMsg  = _U('make_cheese')
+	  CurrentActionData = {}
 	elseif zone == 'SellCheese' then
-		if koda_poochQTE >= 1 then
-			CurrentAction     = zone
-			CurrentActionMsg  = _U('sell_cheese')
-			CurrentActionData = {}
-		end
+    CurrentAction     = zone
+		CurrentActionMsg  = _U('sell_cheese')
+		CurrentActionData = {}
 	end
 end)
 
@@ -93,7 +89,7 @@ if Config.ShowBlips then
 
 			SetBlipSprite (blip, v.sprite)
 			SetBlipDisplay(blip, 4)
-			SetBlipScale  (blip, 0.9)
+			SetBlipScale  (blip, 1.5)
 			SetBlipColour (blip, v.color)
 			SetBlipAsShortRange(blip, true)
 

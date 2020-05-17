@@ -18,7 +18,7 @@ local function HarvestMilk(source)
 			if mleko.limit ~= -1 and mleko.count >= mleko.limit then
 				TriggerClientEvent('esx:showNotification', source, _U('bag_full'))
 			else
-				xPlayer.addInventoryItem('mleko', 1)
+				xPlayer.addInventoryItem('mleko', Config.HowMuchMilkGet)
 				HarvestMilk(source)
 			end
 		end
@@ -58,8 +58,8 @@ local function Smietana(source)
 			elseif kodaQuantity < 2 then
 				TriggerClientEvent('esx:showNotification', source, _U('you_do_not_have_any_more_oranges'))
 			else
-				xPlayer.removeInventoryItem('mleko', 2)
-				xPlayer.addInventoryItem('smietana', 1)
+				xPlayer.removeInventoryItem('mleko', Config.HowMuchMilkWithdraw)
+				xPlayer.addInventoryItem('smietana', Config.HowMuchSmietanaGet)
 				Smietana(source)
 			end
 		end
@@ -95,34 +95,57 @@ local function SellCheese(source)
 			local poochQuantity = xPlayer.getInventoryItem('ser').count
 
 			if poochQuantity == 0 then
-				TriggerClientEvent('esx:showNotification', source, _U('you_do_not_have_juice_orage'))
+				TriggerClientEvent('esx:showNotification', source, _U('you_do_not_have_cheese'))
 			else
-				xPlayer.removeInventoryItem('ser', 1)
-				if CopsConnected == 0 then
-					xPlayer.addAccountMoney('bank', 10)
-					TriggerClientEvent('esx:showNotification', source, _U('sell_juice'))
-				elseif CopsConnected == 1 then
-					xPlayer.addAccountMoney('bank', 10)
-					TriggerClientEvent('esx:showNotification', source, _U('sell_juice'))
-				elseif CopsConnected == 2 then
-					xPlayer.addAccountMoney('bank', 10)
-					TriggerClientEvent('esx:showNotification', source, _U('sell_juice'))
-				elseif CopsConnected == 3 then
-					xPlayer.addAccountMoney('bank', 10)
-					TriggerClientEvent('esx:showNotification', source, _U('sell_juice'))
-				elseif CopsConnected == 4 then
-					xPlayer.addAccountMoney('bank', 10)
-					TriggerClientEvent('esx:showNotification', source, _U('sell_juice'))
-				elseif CopsConnected >= 5 then
-					xPlayer.addAccountMoney('bank', 10)
-					TriggerClientEvent('esx:showNotification', source, _U('sell_juice'))
-				end
-
+				xPlayer.removeInventoryItem('ser', Config.HowMuchSerSell)
+				xPlayer.addAccountMoney('bank', Config.Money)
+				TriggerClientEvent('esx:showNotification', source, _U('sell_juice'))
+			end
 				SellCheese(source)
+		end
+	end)
+end
+
+local function Cheese(source)
+
+	SetTimeout(Config.TimeToMakeCheese, function()
+		if PlayersCheese[source] then
+			local xPlayer = ESX.GetPlayerFromId(source)
+			local ile_smietany = xPlayer.getInventoryItem('smietana').count
+			local ile_sera = xPlayer.getInventoryItem('ser')
+
+			if ile_sera.limit ~= -1 and ile_sera.count >= ile_sera.limit then
+				TriggerClientEvent('esx:showNotification', source, _U('you_do_not_have_enough_oranges'))
+			elseif ile_smietany < 2 then
+				TriggerClientEvent('esx:showNotification', source, _U('you_do_not_have_smietana'))
+			else
+				xPlayer.removeInventoryItem('smietana', Config.HowMuchSmietanaWithdraw)
+				xPlayer.addInventoryItem('ser', Config.HowMuchSerGet)
+				Cheese(source)
 			end
 		end
 	end)
 end
+
+
+RegisterServerEvent('esx_mleko:startMakeCheese')
+AddEventHandler('esx_mleko:startMakeCheese', function()
+	local _source = source
+
+	if not PlayersCheese[_source] then
+		PlayersCheese[_source] = true
+		TriggerClientEvent('esx:showNotification', _source, _U('transform_cheese'))
+		Cheese(_source)
+	else
+		print(('esx_mleko: %s attempted to exploit the marker!'):format(GetPlayerIdentifiers(_source)[1]))
+	end
+end)
+
+RegisterServerEvent('esx_mleko:stopMakeCheese')
+AddEventHandler('esx_mleko:stopMakeCheese', function()
+	local _source = source
+	PlayersCheese[_source] = false
+end)
 
 RegisterServerEvent('esx_mleko:startSellCheese')
 AddEventHandler('esx_mleko:startSellCheese', function()
@@ -142,7 +165,7 @@ RegisterServerEvent('esx_mleko:stopSellCheese')
 AddEventHandler('esx_mleko:stopSellCheese', function()
 	local _source = source
 
-	PlayersSellingKoda[_source] = false
+	PlayersSellCheese[_source] = false
 end)
 
 RegisterServerEvent('esx_mleko:GetUserInventory')
